@@ -1,45 +1,34 @@
+package ELF::Extract::Sections::Section;
+our $VERSION = '0.0103';
+
+
+# ABSTRACT:  An Objective reference to a section in an ELF file.
+
 use strict;
 use warnings;
 use MooseX::Declare;
 
 class ELF::Extract::Sections::Section {
-    our $VERSION = '0.0102';
-    use MooseX::Has::Sugar qw( :allattrs );
-    use MooseX::Types::Moose qw( Str Int );
-    use MooseX::Types::Path::Class qw( File );
+    use MooseX::Has::Sugar 0.0300;
+    use MooseX::Types::Moose                ( ':all', );
+    use ELF::Extract::Sections::Meta::Types ( ':all', );
+    use MooseX::Types::Path::Class          ( 'File', );
 
-    use overload '""'          => \&to_string;
-    use MooseX::Types -declare => [qw( FilterField )];
+    use overload '""' => \&to_string;
 
-    BEGIN {
-        subtype FilterField, as enum( [qw[ name offset size ]] );
-    }
-    has source => (
-        isa => File,
-        ro, required, coerce => 1,
-    );
+    has source => ( isa => File, ro, required, coerce, );
+    has name   => ( isa => Str,  ro, required );
+    has offset => ( isa => Int,  ro, required );
+    has size   => ( isa => Int,  ro, required );
 
-    has name => ( isa => Str, ro, required );
-
-    has offset => ( isa => Int, ro, required );
-
-    has size => ( isa => Int, ro, required );
-
-    #<<<
     method to_string ( Any $other?, Bool $polarity? ) {
-    #>>>
-              return sprintf(
-                  qq{[ Section %s of size %s in %s @ %x to %x ]},
-                  $self->name,   $self->size,
-                  $self->source, $self->offset,
-                  $self->offset + $self->size
-              );
+        return sprintf(
+            qq{[ Section %s of size %s in %s @ %x to %x ]},
+            $self->name, $self->size, $self->source, $self->offset, $self->offset + $self->size,
+            );
+    };
 
-        };
-
-    #<<<
     method compare ( ELF::Extract::Sections::Section :$other! , FilterField :$field! ){
-    #>>>
         if ( $field eq 'name' ) {
             return ( $self->name cmp $other->name );
         }
@@ -50,43 +39,46 @@ class ELF::Extract::Sections::Section {
             return ( $self->size <=> $other->size );
         }
         return undef;
-      }
+    };
 
-    #<<<
     method write_to( File :$file does coerce  ){
-    #>>>
         my $fh = $self->source->openr;
-          seek( $fh, $self->offset, 0 );
-          my $output     = $file->openw;
-          my $chunksize  = 1024;
-          my $bytes_left = $self->size;
-          my $chunk = ( $bytes_left < $chunksize ) ? $bytes_left : $chunksize;
-          while ( read( $fh, my $buffer, $chunk ) ) {
+        seek( $fh, $self->offset, 0 );
+        my $output     = $file->openw;
+        my $chunksize  = 1024;
+        my $bytes_left = $self->size;
+        my $chunk      = ( $bytes_left < $chunksize ) ? $bytes_left : $chunksize;
+        while ( read( $fh, my $buffer, $chunk ) ) {
             print {$output} $buffer;
             $bytes_left -= $chunksize;
             $chunk = ( $bytes_left < $chunksize ) ? $bytes_left : $chunksize;
         }
         return 1;
-      }
+    };
 
-    #<<<
     method contents {
-    #>>>
         my $fh = $self->source->openr;
         seek( $fh, $self->offset, 0 );
         my $b;
         read( $fh, $b, $self->size );
         return $b;
-    }
+    };
 };
 
 1;
 
-__END__
 
-=head1 Name
+
+
+=pod
+
+=head1 NAME
 
 ELF::Extract::Sections::Section - An Objective reference to a section in an ELF file.
+
+=head1 VERSION
+
+version 0.0103
 
 =head1 Description
 
@@ -149,7 +141,6 @@ C<Int>: Position in bytes relative to the start of the file.
 
 Returns an C<ELF::Extract::Sections::Section> object.
 
-
 =head2 -> source
 
 returns C<Path::Class::File>
@@ -205,3 +196,21 @@ C<Str>|C<Path::Class::File>: File target to write section contents to.
 =head2 -> contents
 
 returns C<Str> of binary data read out of file.
+
+=head1 AUTHOR
+
+  Kent Fredric <kentnl@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Kent Fredric.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
+
+
+__END__
+

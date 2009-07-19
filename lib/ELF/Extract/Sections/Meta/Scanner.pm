@@ -1,21 +1,35 @@
 package ELF::Extract::Sections::Meta::Scanner;
+our $VERSION = '0.0103';
+
+
+# ABSTRACT: Interface Contract for Scanners
 
 # $Id:$
 use strict;
 use warnings;
 
-use Moose::Role;
+use MooseX::Declare;
 
-use namespace::clean -except => [qw( meta )];
-our $VERSION = '0.0102';
-with 'MooseX::Log::Log4perl';
+role ELF::Extract::Sections::Meta::Scanner with MooseX::Log::Log4perl {
 
-requires
-  qw( open_file next_section section_offset section_size section_name can_compute_size );
+  requires( 'open_file', 'next_section', 'section_offset', 'section_size', 'section_name', 'can_compute_size' );
+
+}
 
 1;
 
-__END__
+
+
+
+=pod
+
+=head1 NAME
+
+ELF::Extract::Sections::Meta::Scanner - Interface Contract for Scanners
+
+=head1 VERSION
+
+version 0.0103
 
 =head1 Required Methods for Applying Roles
 
@@ -48,3 +62,21 @@ This retuns wether or not this code is capable of discerning section sizes on it
 return 1 if true, return undef otherwise.
 
 This will make us try guessing how big sections are by sorting them.
+
+=head1 AUTHOR
+
+  Kent Fredric <kentnl@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Kent Fredric.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
+
+
+__END__
+

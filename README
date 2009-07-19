@@ -1,6 +1,9 @@
-Name
+NAME
     ELF::Extract::Sections - Extract Raw Chunks of data from identifiable
     ELF Sections
+
+VERSION
+    version 0.0103
 
 Caveats
     1. Beta Software
@@ -87,9 +90,6 @@ Debugging
     I request however you don't do that for modules intended to be consumed
     by others without good cause.
 
-Author
-    Kent Fredric, "<kentnl@cpan.org>"
-
 Bugs
     Please report any bugs or feature requests to "bug-elf-extract-sections
     at rt.cpan.org", or through the web interface at
@@ -121,9 +121,12 @@ Support
         <http://search.cpan.org/dist/ELF-Extract-Sections/>
 
 Acknowledgements
-Copyright & License
-    Copyright 2009 Kent Fredric, all rights reserved.
+AUTHOR
+      Kent Fredric <kentnl@cpan.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2009 by Kent Fredric.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

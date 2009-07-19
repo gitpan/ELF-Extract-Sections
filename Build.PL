@@ -2,17 +2,17 @@
 use strict;
 use warnings;
 
-use ExtUtils::MakeMaker;
+use Module::Build;
 
-WriteMakefile(
-  DISTNAME  => 'ELF-Extract-Sections',
-  NAME      => 'ELF::Extract::Sections',
-  AUTHOR    => 'Kent\ Fredric\ \<kentnl\@cpan\.org\>',
-  ABSTRACT  => 'Extract\ Raw\ Chunks\ of\ data\ from\ identifiable\ ELF\ Sections',
-  VERSION   => '0.0103',
-  EXE_FILES => [ qw() ],
-  (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
-  PREREQ_PM    => {
+my $build = Module::Build->new(
+  module_name   => 'ELF::Extract::Sections',
+  license       => 'perl',
+  dist_abstract => "Extract\ Raw\ Chunks\ of\ data\ from\ identifiable\ ELF\ Sections",
+  dist_name     => "ELF\-Extract\-Sections",
+  dist_author   => [
+"Kent\ Fredric\ \<kentnl\@cpan\.org\>",
+  ],
+  requires      => {
     "MooseX::Types::Moose" => '0.10',
     "MooseX::Has::Sugar" => '0.0300',
     "MooseX::Declare" => '0.20',
@@ -30,4 +30,7 @@ WriteMakefile(
     "Path::Class" => '0',
     "Log::Log4perl" => '1.21',
   },
+  script_files => [ qw() ],
 );
+
+$build->create_build_script;
